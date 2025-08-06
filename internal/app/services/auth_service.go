@@ -41,7 +41,7 @@ func (s *AuthService) Login(user models.UserLoginRequest) (*models.User, error) 
 
 	err = bcrypt.CompareHashAndPassword([]byte(dbUser.Password), []byte(user.Password))
 	if err != nil {
-		return nil, errors.New("Invalid credentials!")
+		return nil, errors.New("invalid credentials")
 	}
 
 	return dbUser, nil

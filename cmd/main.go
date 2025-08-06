@@ -1,8 +1,13 @@
 package main
 
 import (
+	"auth/internal/app/handlers"
+	"auth/internal/app/repositories"
+	"auth/internal/app/services"
 	"auth/internal/config"
+	"auth/internal/routes"
 	"log"
+	"net/http"
 	"os"
 
 	"github.com/joho/godotenv"
@@ -10,6 +15,8 @@ import (
 
 func main() {
 	err := godotenv.Load()
+	mux := http.NewServeMux()
+
 	if err != nil {
 		log.Fatal("Error to load .env file!")
 	}
@@ -23,4 +30,12 @@ func main() {
 	}
 
 	db := config.InitDB(setting)
+
+	authRepo := repositories.NewAuthRepository(db)
+	authService := services.NewAuthService(authRepo)
+	authHandlers := handlers.NewAuthHandlers(authService)
+
+	routes.RegisterAuthRoutes(mux, authHandlers)
+
+	http.ListenAndServe(":8080", mux)
 }
