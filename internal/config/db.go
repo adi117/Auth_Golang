@@ -30,16 +30,7 @@ func InitDB(cfg Config) *gorm.DB {
 		log.Fatalf("Failed to connect to database: %v", err)
 	}
 
-	sqlDB, err := db.DB()
-	if err != nil {
-		log.Fatalf("Failed to get sql.DB: %v", err)
-	}
-
-	if err := sqlDB.Ping(); err != nil {
-		log.Fatalf("Database unreachable: %v", err)
-	}
-
 	DB = db
 	log.Println("Successfully connected to database!")
-	return nil
+	return db
 }
