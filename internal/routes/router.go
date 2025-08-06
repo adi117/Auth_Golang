@@ -11,3 +11,7 @@ func RegisterAuthRoutes(mux *http.ServeMux, handler *handlers.AuthHandlers) {
 	mux.HandleFunc("/login", handler.Login)
 	mux.HandleFunc("/protected", middleware.JWTMiddleware(middleware.ProtectedEndpoint))
 }
+
+func RegisterTerminalRoutes(mux *http.ServeMux, handler *handlers.TerminalHandlers) {
+	mux.HandleFunc("/terminal/create", middleware.JWTMiddleware(handler.CreateTerminal))
+}

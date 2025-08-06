@@ -35,7 +35,12 @@ func main() {
 	authService := services.NewAuthService(authRepo)
 	authHandlers := handlers.NewAuthHandlers(authService)
 
+	terminalRepo := repositories.NewTerminalRepository(db)
+	terminalService := services.NewTerminalService(terminalRepo)
+	terminalHandlers := handlers.NewTerminalHandlers(terminalService)
+
 	routes.RegisterAuthRoutes(mux, authHandlers)
+	routes.RegisterTerminalRoutes(mux, terminalHandlers)
 
 	http.ListenAndServe(":8080", mux)
 }
