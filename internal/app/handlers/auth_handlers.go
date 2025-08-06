@@ -3,6 +3,7 @@ package handlers
 import (
 	"auth/internal/app/models"
 	"auth/internal/app/services"
+	"auth/internal/utils"
 	"encoding/json"
 	"net/http"
 )
@@ -32,6 +33,8 @@ func (h *AuthHandlers) Register(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	user.Password = "" // set blank password in response
+
 	json.NewEncoder(w).Encode(user)
 }
 
@@ -52,5 +55,25 @@ func (h *AuthHandlers) Login(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	json.NewEncoder(w).Encode(user)
+	token, err := utils.GenerateJWT(user.Id, user.Username)
+
+	if err != nil {
+		http.Error(w, "Could not generate token", http.StatusInternalServerError)
+		return
+	}
+
+	resp := struct {
+		User  models.UserReponse   `json:"user"`
+		Token *utils.TokenResponse `json:"token"`
+	}{
+		User: models.UserReponse{
+			Id:       user.Id,
+			Username: user.Username,
+			Email:    user.Email,
+		},
+		Token: token,
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(resp)
 }

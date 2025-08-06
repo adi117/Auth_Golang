@@ -21,3 +21,9 @@ type UserLoginRequest struct {
 	Password string `json:"password"`
 	Email    string `json:"email"`
 }
+
+type UserReponse struct {
+	Id       int    `json:"id"`
+	Username string `json:"username"`
+	Email    string `json:"email"`
+}
